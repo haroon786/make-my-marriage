@@ -1,5 +1,18 @@
 import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = { reactStrictMode: true };
+const nextConfig: NextConfig = {
+  reactStrictMode: true,
+  async headers() {
+    return [
+      {
+        source: "/reset-password",
+        headers: [
+          { key: "Referrer-Policy", value: "no-referrer" },
+          { key: "Cache-Control", value: "no-store" },
+        ],
+      },
+    ];
+  },
+};
 
 export default nextConfig;

@@ -1,12 +1,18 @@
 ﻿# Make My Marriage
 
-Initial application skeleton for the wedding-management product described in [docs/PRD.md](docs/PRD.md). The four design documents remain the product baseline.
+Wedding-management application described in [docs/PRD.md](docs/PRD.md), currently implementing the V1 homepage and authentication. The four design documents remain the product baseline.
+
+Track progress in [implementation status](docs/IMPLEMENTATION_STATUS.md) for what is built, verified and pending, and [implementation log](docs/IMPLEMENTATION_LOG.md) for the delivery history from the initial scaffold onward. Update both after each feature or meaningful fix.
 
 ## Run locally
 
+For beginner-friendly explanations from our project discussions, read the [full-stack learning Q&A](docs/LEARNING_QA.md). Add future frontend/backend learning questions there as they arise.
+
+For a complete backend-focused walkthrough, read the [authentication study guide](docs/AUTH_STUDY_GUIDE.md), including frontend context for an Angular developer, every auth workflow, and the file/function reference.
+
 Use Node.js 22.17 or newer and npm. Install dependencies with `npm ci`, then run `npm run dev` and visit http://localhost:3000. On Windows PowerShell, use `npm.cmd` if execution policy blocks `npm.ps1`.
 
-The landing page needs no external credentials. Copy `.env.example` to `.env.local` when configuring services; never commit credentials. Database configuration is validated only when `connectDatabase()` is called. The skeleton does not call it, create collections, or seed data.
+The homepage and auth screens render without external credentials. Copy `.env.example` to `.env.local` when configuring services; never commit credentials. Signup/login require `MONGODB_URI`; reset emails additionally require `RESEND_API_KEY`, `EMAIL_FROM` and `APP_URL`. See [authentication setup](docs/AUTHENTICATION.md). Auth requests create their collections/indexes when needed; there are no seeded users.
 
 ## Checks
 
@@ -14,6 +20,7 @@ The landing page needs no external credentials. Copy `.env.example` to `.env.loc
 - `npm run typecheck` — generate route types and check strict TypeScript.
 - `npm run build` — production build.
 - `npm run check` — all three checks in sequence.
+- `npm test` — Vitest integration/configuration tests using an isolated temporary MongoDB replica set; email delivery is mocked.
 - `npm start` — serve a completed production build.
 
 ## Organisation
@@ -24,24 +31,24 @@ src/modules/      Domain services, schemas, models, repositories, and feature UI
 src/server/       Server-only configuration, connections, HTTP helpers, adapters
 src/components/   Reusable presentation components
 src/lib/          Browser-safe shared utilities
-tests/            Future cross-module integration and end-to-end checks
+tests/            Authentication integration and configuration checks
 ```
 
-Route groups reserve auth, onboarding, dashboard, and public surfaces. Empty directories are tracked with `.gitkeep`; they do not create accessible routes. Domain directories follow the discussed architecture and are populated feature by feature. No dashboard is exposed before authentication exists.
+Route groups organise auth, onboarding, dashboard, and public surfaces. Empty directories are tracked with `.gitkeep`; they do not create accessible routes. Domain directories are populated feature by feature. Onboarding and dashboard placeholders require authentication.
 
 Services own business rules; repositories own scoped persistence. Private wedding context must come from current membership. Cross-module access uses explicit server functions rather than another module's model. Client components must never import database code, server configuration, or provider SDKs. Shared Zod schemas and public DTOs should remain browser-safe.
 
-`src/server/db/connection.ts` caches the connection promise across hot reloads and concurrent calls, resets failed attempts, and avoids exposing connection strings in errors. It is infrastructure only; domain models arrive with features. Database code uses the Node.js runtime.
+`src/server/db/connection.ts` caches the connection promise across hot reloads and concurrent calls, resets failed attempts, and avoids exposing connection strings in errors. Auth domain models live in `src/modules/auth`. Database code uses the Node.js runtime.
 
-`src/server/http` provides data and application-error response helpers. Future handlers must validate input with Zod, enforce authentication/authorization, and map errors through these helpers. No application API endpoints are implemented yet.
+`src/server/http` provides data and application-error response helpers. Handlers validate input with Zod, enforce applicable authentication/authorization, and map errors through these helpers. Auth endpoints live under `/api/auth`.
 
 ## Current scope
 
-Included: landing page, root layout, loading/error/not-found states, Tailwind CSS v4, strict TypeScript, linting, environment template, connection utility, HTTP conventions, and folder boundaries.
+Included: responsive Stitch-inspired V1 homepage, signup/login/forgot-password/reset-password screens in the approved Royal Heritage style, authentication APIs, hashed passwords and opaque sessions, reset email adapter, protected page guards, and integration tests. See [homepage notes](docs/HOMEPAGE.md) and [authentication notes](docs/AUTHENTICATION.md). Start planning opens signup. Homepage previews remain illustrative.
 
-Not implemented yet: authentication, membership, wedding creation, CRUD features, email jobs, external integrations, guest pages, and photo uploads. Environment placeholders for future integrations are intentionally unused. No tests claim to validate those features.
+Not implemented yet: wedding creation, membership management, wedding CRUD features, background email jobs, guest pages, and photo uploads. Existing membership context is read only for authentication redirects. Local Atlas configuration and live HTTP auth checks are complete; real reset-email delivery still needs Resend configuration and verification. See the implementation tracker for pending browser checks.
 
-Next functional increment follows PRD Phase 1: authentication, wedding creation, wedding membership, and the protected dashboard shell. Tailwind CSS is the styling foundation; no component library, authentication provider, queue, or testing framework has been introduced.
+Next functional increment: wedding creation and initial wedding membership. Tailwind CSS remains the styling foundation. Authentication is custom; Vitest tests persistence against a temporary MongoDB replica set.
 
 ## Styling
 

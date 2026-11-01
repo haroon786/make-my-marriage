@@ -1,0 +1,67 @@
+// Fictional, static marketing examples. Never use these as application records.
+export const ceremonies = [
+  {
+    name: "Haldi",
+    subtitle: "A little sunshine, a lot of love",
+    date: "15 DEC",
+    time: "10:00 AM",
+    venue: "Family Courtyard",
+    dress: "Shades of yellow",
+    image: "/images/home/haldi.jpg",
+    alt: "Marigold flowers and turmeric bowls at a Haldi ceremony",
+    tone: "bg-gold-light",
+  },
+  {
+    name: "Mehndi",
+    subtitle: "Stories written in henna",
+    date: "15 DEC",
+    time: "4:00 PM",
+    venue: "Garden Pavilion",
+    dress: "Festive greens",
+    image: "/images/home/mehndi.jpg",
+    alt: "Intricate bridal henna during a Mehndi celebration",
+    tone: "bg-sage",
+  },
+  {
+    name: "Sangeet",
+    subtitle: "An evening to remember",
+    date: "16 DEC",
+    time: "7:00 PM",
+    venue: "Grand Ballroom",
+    dress: "A touch of sparkle",
+    image: "/images/home/sangeet.jpg",
+    alt: "Golden lights decorating a Sangeet stage",
+    tone: "bg-blush",
+  },
+  {
+    name: "Wedding ceremony",
+    subtitle: "The beginning of forever",
+    date: "17 DEC",
+    time: "11:00 AM",
+    venue: "Riverside Mandap",
+    dress: "Traditional attire",
+    image: "/images/home/wedding.jpg",
+    alt: "A floral wedding mandap decorated in red and gold",
+    tone: "bg-gold-light",
+  },
+] as const;
+export const previewTasks = [
+  {
+    title: "Confirm the Mehndi artist",
+    assignee: "Priya",
+    due: "12 Dec",
+    done: true,
+  },
+  {
+    title: "Share the wedding invitations",
+    assignee: "Ashu",
+    due: "13 Dec",
+    done: false,
+  },
+  {
+    title: "Choose the Sangeet playlist",
+    assignee: "Ananya",
+    due: "14 Dec",
+    done: false,
+  },
+] as const;

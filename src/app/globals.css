@@ -1,19 +1,64 @@
 ﻿@import "tailwindcss";
 
 @theme {
-  --color-ink: #382c32;
-  --color-muted: #75646b;
-  --color-accent: #8a3e54;
-  --color-paper: #faf6f0;
-  --color-blush: #efdce2;
-  --color-rose-border: #ba8695;
-  --font-sans: Arial, Helvetica, sans-serif;
-  --font-serif: Georgia, "Times New Roman", serif;
+  --color-ink: #242820;
+  --color-muted: #67695e;
+  --color-accent: #1e4b3e;
+  --color-paper: #fff8f3;
+  --color-blush: #f4ede6;
+  --color-rose-border: #d8c7b5;
+  --color-gold: #c59a45;
+  --color-gold-dark: #855c25;
+  --color-gold-light: #f5edd2;
+  --color-forest: #15362c;
+  --color-sage: #edf2e9;
+  --color-line: #e5dcd0;
+  --color-surface: #fffdfa;
+}
+
+@theme inline {
+  --font-sans: var(--font-manrope), Arial, Helvetica, sans-serif;
+  --font-serif: var(--font-playfair), Georgia, "Times New Roman", serif;
 }
 
 @layer base {
-  :root { color-scheme: light; }
-  body { @apply bg-paper font-sans text-ink; line-height: normal; }
-  :focus-visible { @apply outline-3 outline-offset-4 outline-accent; }
+  :root {
+    color-scheme: light;
+  }
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 6rem;
+  }
+  body {
+    @apply bg-paper font-sans text-ink antialiased;
+  }
+  ::selection {
+    @apply bg-gold-light text-forest;
+  }
+  :focus-visible {
+    @apply outline-3 outline-offset-4 outline-accent;
+  }
+  .bg-accent :focus-visible,
+  .bg-forest :focus-visible {
+    outline-color: var(--color-gold-light);
+  }
+  button,
+  summary {
+    cursor: pointer;
+  }
+  dialog::backdrop {
+    background: rgb(11 32 26 / 55%);
+    backdrop-filter: blur(4px);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
 }
-

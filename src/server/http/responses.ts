@@ -4,16 +4,57 @@ import { ZodError } from "zod";
 import { AppError } from "./errors";
 
 export function dataResponse<T>(data: T, status = 200) {
-  return NextResponse.json({ data }, { status, headers: { "Cache-Control": "no-store" } });
+  return NextResponse.json(
+    { data },
+    { status, headers: { "Cache-Control": "no-store" } },
+  );
 }
 
 export function errorResponse(error: unknown) {
+  const headers = { "Cache-Control": "no-store" };
   if (error instanceof ZodError) {
-    const details = Object.fromEntries(error.issues.map((issue) => [issue.path.join(".") || "body", issue.message]));
-    return NextResponse.json({ error: { code: "VALIDATION_ERROR", message: "Invalid request data", details } }, { status: 400 });
+    const details = Object.fromEntries(
+      error.issues.map((issue) => [
+        issue.path.join(".") || "body",
+        issue.message,
+      ]),
+    );
+    return NextResponse.json(
+      {
+        error: {
+          code: "VALIDATION_ERROR",
+          message: "Please check the highlighted fields.",
+          details,
+        },
+      },
+      { status: 400, headers },
+    );
   }
   if (error instanceof AppError) {
-    return NextResponse.json({ error: { code: error.code, message: error.message, ...(error.details && { details: error.details }) } }, { status: error.status });
+    return NextResponse.json(
+      {
+        error: {
+          code: error.code,
+          message: error.message,
+          ...(error.details && { details: error.details }),
+        },
+      },
+      {
+        status: error.status,
+        headers: {
+          ...headers,
+          ...(error.status === 429 ? { "Retry-After": "900" } : {}),
+        },
+      },
+    );
   }
-  return NextResponse.json({ error: { code: "INTERNAL_ERROR", message: "Something went wrong. Please try again." } }, { status: 500 });
+  return NextResponse.json(
+    {
+      error: {
+        code: "INTERNAL_ERROR",
+        message: "Something went wrong. Please try again.",
+      },
+    },
+    { status: 500, headers },
+  );
 }
