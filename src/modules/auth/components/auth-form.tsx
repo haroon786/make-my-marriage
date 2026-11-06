@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { invitationReturnPath } from "@/modules/members/schemas";
 import { useRef, useState, type FormEvent } from "react";
 import {
   forgotPasswordSchema,
@@ -47,10 +48,13 @@ const inputClass =
 export function AuthForm({
   mode,
   token = "",
+  next,
 }: {
   mode: AuthMode;
   token?: string;
+  next?: string;
 }) {
+  const returnPath = invitationReturnPath(next);
   const [pending, setPending] = useState(false);
   const [visible, setVisible] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -137,7 +141,7 @@ export function AuthForm({
       if (mode === "signup" || mode === "login") {
         // Full navigation clears old client route state across account changes.
         window.location.assign(
-          payload.data.hasWedding ? "/app" : "/onboarding",
+          returnPath || (payload.data.hasWedding ? "/app" : "/onboarding"),
         );
         return;
       }
@@ -386,7 +390,7 @@ export function AuthForm({
           <>
             Already have an account?{" "}
             <Link
-              href="/login"
+              href={returnPath ? `/login?next=${encodeURIComponent(returnPath)}` : "/login"}
               className="font-semibold text-accent underline underline-offset-4"
             >
               Log in
@@ -396,7 +400,7 @@ export function AuthForm({
           <>
             New to Make My Marriage?{" "}
             <Link
-              href="/signup"
+              href={returnPath ? `/signup?next=${encodeURIComponent(returnPath)}` : "/signup"}
               className="font-semibold text-accent underline underline-offset-4"
             >
               Create an account

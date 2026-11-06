@@ -73,7 +73,7 @@ export function getEmailEnvironment() {
   if (!result.success)
     throw new AppError(
       "SERVICE_UNAVAILABLE",
-      "Password reset email isn’t available yet. Please try again later.",
+      "Email sending isn’t configured yet. Please try again later.",
       503,
     );
   return result.data;

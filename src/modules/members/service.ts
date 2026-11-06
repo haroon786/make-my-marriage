@@ -3,7 +3,7 @@ import { Types } from "mongoose";
 import { connectDatabase } from "@/server/db/connection";
 import { getWeddingSummary } from "@/modules/wedding/service";
 
-// Read-only boundary for auth. Membership creation belongs to the onboarding feature.
+// Resolve the tenant from trusted membership, never a client-supplied wedding ID.
 export async function getMembershipContext(userId: string) {
   const db = await connectDatabase();
   const membership = await db.connection

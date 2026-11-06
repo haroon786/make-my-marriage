@@ -2,8 +2,9 @@ import "server-only";
 import { redirect } from "next/navigation";
 import { readAuthContext } from "./session";
 import { AppError } from "@/server/http/errors";
+import { invitationReturnPath } from "@/modules/members/schemas";
 
-export async function redirectSignedInUser() {
+export async function redirectSignedInUser(next?: string) {
   let context;
   try {
     context = await readAuthContext();
@@ -12,5 +13,5 @@ export async function redirectSignedInUser() {
     if (error instanceof AppError && error.status === 503) return;
     throw error;
   }
-  if (context) redirect(context.wedding ? "/app" : "/onboarding");
+  if (context) redirect(invitationReturnPath(next) || (context.wedding ? "/app" : "/onboarding"));
 }
